@@ -1,115 +1,103 @@
 # JSON to CSV Converter (Java + Maven)
 
-Este proyecto es una utilidad en **Java** que permite leer un archivo en formato **JSON** y exportarlo a un archivo **CSV** utilizando **Jackson** y **OpenCSV**.  
+This project is a **Java desktop utility** that reads a file in **JSON** format and converts it into a **CSV** file using libraries like **Jackson** and **OpenCSV**.  
 
 ---
 
-## 🚀 Funcionalidades
-- Leer un archivo JSON y parsearlo en una lista de objetos (`List<Map<String,Object>>`).
-- Manejo de errores comunes:
-  - Archivo inexistente.
-  - Problemas de formato en el JSON.
-- Escribir los datos en un archivo CSV con encabezados automáticos.
-- Exportar el CSV con el mismo esquema de columnas que el JSON.
-- Permitir configuración de parámetros como nombre de archivo y delimitador desde argumentos de línea de comandos.
+## 🚀 Features
+- Read a JSON file and parse its content into a list of objects (`List<Map<String,Object>>`).
+- Transform JSON data into a tabular structure suitable for CSV.
+- Write the data into a CSV file with automatically generated headers.
+- Parameter configuration:
+  - Input file name.
+  - Output file name.
+  - CSV delimiter.
+- Error handling for:
+  - Missing files.
+  - Invalid JSON format.
+  - Empty data.
 
 ---
 
-## 📂 Estructura del proyecto
+## 📂 Project Structure
 ```
 json-csv/
  ├─ src/
- │   └─ main/
- │       └─ java/
- │           ├─ Main.java
- │           ├─ JsonReader.java
- │           ├─ CsvWriter.java
- │           └─ DataTransformer.java
- │
- │   └─ resources/
- │       └─ data.json       # archivo JSON de ejemplo
- │
- ├─ .gitignore              # ignora /target y archivos generados
- ├─ pom.xml                 # configuración de Maven
- ├─ README.md               # documentación del proyecto
- └─ output.csv              # generado al ejecutar el programa
+ │   ├─ main/
+ │   │   ├─ java/
+ │   │   │   ├─ Main.java              # Orchestrates the program
+ │   │   │   ├─ JsonReader.java        # Handles JSON file reading
+ │   │   │   ├─ CsvWriter.java         # Handles CSV file writing
+ │   │   │   └─ DataTransformer.java   # Data transformation logic
+ │   │   └─ resources/
+ │   │       └─ data.json              # Example input file
+ │   └─ test/                          # (Optional) Unit tests
+ ├─ output.csv                         # Generated CSV file
+ └─ pom.xml                            # Maven configuration
 ```
 
 ---
 
-## ⚙️ Requisitos
-- **Java 17** o superior.
-- **Maven 3.6+** instalado y configurado en el `PATH`.
+## ⚙️ Requirements
+- **Java 17** or higher.  
+- **Maven 3.6+** installed and available in the system `PATH`.  
 
 ---
 
-## 📦 Dependencias
-Incluidas en `pom.xml`:
-- [Jackson Databind](https://github.com/FasterXML/jackson) → para manejar JSON.
-- [OpenCSV](http://opencsv.sourceforge.net/) → para generar archivos CSV.
+## 📦 Dependencies
+Declared in `pom.xml`:
+- [Jackson Databind](https://github.com/FasterXML/jackson) → for JSON parsing.  
+- [OpenCSV](http://opencsv.sourceforge.net/) → for CSV generation.  
 
 ---
 
-## ▶️ Ejecución
-1. Clonar o descargar el proyecto.  
-2. Compilar el proyecto con Maven:
+## ▶️ How to Run
+1. Clone or download the project.  
+2. Compile the project with Maven:
    ```bash
    mvn clean install
    ```
-3. Ejecutar el programa:
+3. Run the program (default JSON input: `src/main/resources/data.json`):
    ```bash
-   mvn exec:java
+   mvn exec:java -Dexec.mainClass=Main
    ```
-   Por defecto:
-   - Lee el archivo `data.json`.
-   - Genera un archivo `output.csv` en la raíz del proyecto.
-4. También puedes pasar parámetros:
-   ```bash
-   mvn exec:java -Dexec.args="data.json salida.csv ;"
-   ```
-   - `data.json` → archivo de entrada.  
-   - `salida.csv` → archivo de salida.  
-   - `;` → delimitador de columnas (ejemplo: `,` o `;`).
+4. The program will:
+   - Read `data.json`.  
+   - Generate `output.csv` in the project root.  
 
 ---
 
-## 📖 Ejemplo
+## 📖 Example
 
-### `data.json`
+### Input (`data.json`)
 ```json
 [
-  {"id": 1, "name": "Luis", "email": "luis@example.com"},
-  {"id": 2, "name": "Ana", "email": "ana@example.com"}
+  {"id": 1, "name": "Alice", "email": "alice@example.com"},
+  {"id": 2, "name": "Bob", "email": "bob@example.com"}
 ]
 ```
 
-### `output.csv`
+### Output (`output.csv`)
 ```csv
 id,name,email
-1,Luis,luis@example.com
-2,Ana,ana@example.com
+1,Alice,alice@example.com
+2,Bob,bob@example.com
 ```
 
 ---
 
-## 🔄 Algoritmo de Transformación
-1. Leer JSON desde archivo o recursos.  
-2. Mapear los datos a una lista de `Map<String,Object>`.  
-3. Aplicar transformaciones (por ahora directo, pero se pueden agregar validaciones).  
-4. Escribir CSV con encabezados automáticos y el delimitador elegido.  
+## 🧩 Transformation Algorithm
+1. Read the JSON file.  
+2. Map objects into `List<Map<String,Object>>`.  
+3. Extract column headers from the first object’s keys.  
+4. Convert values to strings and build CSV rows.  
+5. Write CSV file with the selected delimiter.  
 
 ---
 
-## ✅ Checklist de verificación
-- [x] Lectura de JSON desde archivo o `resources/`.
-- [x] Manejo de errores (archivo no encontrado, JSON inválido, datos vacíos).  
-- [x] Escritura correcta de CSV con encabezados.  
-- [x] Parámetros configurables desde línea de comandos.  
-- [x] Código modular (Main, JsonReader, CsvWriter, DataTransformer).  
-- [x] Documentación con JavaDoc y README actualizado.  
+## ✨ Notes
+- Default file paths are configured in `Main.java`, but you can change them or pass parameters.  
+- If `data.json` is missing or invalid, the program will print an error message.  
+- If no data is found, no CSV will be generated.  
 
 ---
-
-## ✨ Notas
-- Puedes cambiar el delimitador con argumentos (`;`, `,`, `|`, etc.).  
-- Si `data.json` no existe o está vacío, el programa mostrará un mensaje de error.  
